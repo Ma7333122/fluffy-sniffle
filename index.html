@@ -2,7 +2,13 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="نظام الفواتير المتقدم - إنشاء وإدارة الفواتير بسهولة">
+  <meta name="theme-color" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="نظام الفواتير">
+  <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;نظام الفواتير المتقدم&quot;,&quot;short_name&quot;:&quot;الفواتير&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#ffffff&quot;,&quot;theme_color&quot;:&quot;#3498db&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/png&quot;}]}">
   <title>نظام الفواتير المتقدم</title>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -18,6 +24,143 @@
       --success: #27ae60;
       --warning: #f39c12;
       --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --bg-color: #ffffff;
+      --text-color: #2c3e50;
+      --card-bg: #ffffff;
+      --border-color: #ddd;
+    }
+    
+    /* وضع الإضاءة الليلية */
+    body.dark-mode {
+      --bg-color: #1a1a1a;
+      --text-color: #e0e0e0;
+      --card-bg: #2d2d2d;
+      --border-color: #444;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: var(--text-color);
+    }
+    
+    body.dark-mode header {
+      background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+      border-color: #444;
+    }
+    
+    body.dark-mode .tab-content,
+    body.dark-mode .invoice-preview {
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+    
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background: #1a1a1a;
+      color: var(--text-color);
+      border-color: var(--border-color);
+    }
+    
+    body.dark-mode table {
+      background: var(--card-bg);
+    }
+    
+    body.dark-mode th {
+      background-color: var(--primary);
+    }
+    
+    body.dark-mode tr:nth-child(even) {
+      background-color: #333;
+    }
+    
+    body.dark-mode .totals-section {
+      background: #333;
+      color: var(--text-color);
+    }
+    
+    body.dark-mode .section {
+      border-bottom-color: var(--border-color);
+    }
+    
+    body.dark-mode .notification {
+      color: white;
+    }
+    
+    body.dark-mode .developer-contact {
+      background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    }
+    
+    body.dark-mode #qrCustomSection {
+      background: #333;
+      border-color: #555;
+    }
+    
+    body.dark-mode #qrCustomSection p {
+      color: #ccc;
+    }
+    
+    body.dark-mode #quickAddModal > div {
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+    
+    body.dark-mode #quickAddModal input {
+      background: #1a1a1a;
+      color: var(--text-color);
+      border-color: var(--border-color);
+    }
+    
+    /* تحسينات تفاعلية */
+    .btn, .quick-action-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .btn:active, .quick-action-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+    
+    /* تحسينات على قسم QR Code */
+    #qrCustomSection {
+      transition: all 0.3s ease;
+    }
+    
+    /* تحسينات على اللوجو */
+    .logo-preview {
+      transition: all 0.3s ease;
+    }
+    
+    .logo-preview:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* تحسينات على شريط التحميل */
+    .image-saving {
+      backdrop-filter: blur(5px);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.9;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+    
+    #imageProgress {
+      font-weight: 600;
+      color: var(--secondary) !important;
+      font-size: 1.1rem;
+      animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
     }
     
     * {
@@ -34,36 +177,295 @@
       line-height: 1.6;
       padding: 15px;
       min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* تحسينات الأداء */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* تحسينات للشاشات عالية الدقة */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      body {
+        -webkit-font-smoothing: antialiased;
+      }
+    }
+    
+    /* زر تبديل الوضع الليلي */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 2000;
+      background: var(--secondary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* قسم التواصل مع المطور */
+    .developer-contact {
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 30px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .developer-contact::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .developer-contact:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4);
+    }
+    
+    .developer-contact > * {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .developer-contact h3 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .developer-contact p {
+      margin: 8px 0;
+      font-size: 0.95rem;
+    }
+    
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 15px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 6px rgba(37, 211, 102, 0.3);
+    }
+    
+    .whatsapp-btn:hover {
+      background: #20BA5A;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(37, 211, 102, 0.4);
+    }
+    
+    /* تحسينات اللوجو */
+    .logo-upload-container {
+      margin-bottom: 15px;
+    }
+    
+    .logo-preview {
+      max-width: 150px;
+      max-height: 150px;
+      margin-top: 10px;
+      border: 2px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      display: none;
+    }
+    
+    .logo-preview img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    
+    /* QR Code في منتصف الأعلى */
+    .qr-code-top {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    
+    body.dark-mode .qr-code-top {
+      background: #333;
+      border-color: #555;
+    }
+    
+    .qr-code-top-center {
+      text-align: center;
+    }
+    
+    .qr-code-top-center img {
+      max-width: 150px;
+      height: auto;
+      border: 2px solid var(--border-color);
+      padding: 8px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    body.dark-mode .qr-code-top-center img {
+      background: #1a1a1a;
+      border-color: #555;
+    }
+    
+    /* اللوجو في رأس الفاتورة */
+    .company-logo-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .company-logo-preview {
+      max-width: 150px;
+      max-height: 150px;
+      border-radius: 8px;
+      border: 2px solid var(--border-color);
+      padding: 8px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      display: block;
+    }
+    
+    body.dark-mode .company-logo-preview {
+      background: #1a1a1a;
+      border-color: #555;
+    }
+    
+    /* إخفاء الشعار النصي من الفاتورة */
+    .invoice-preview #companyLogoTextContainer,
+    .invoice-preview #previewCompanyLogo {
+      display: none !important;
+    }
+    
+    /* تحسينات على الفاتورة */
+    .invoice-preview {
+      position: relative;
+    }
+    
+    /* تحسينات على QR Code */
+    .qr-code-top-center img {
+      transition: all 0.3s ease;
+    }
+    
+    .qr-code-top-center img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     
     /* تحسينات للشركات */
     .company-badge {
       display: inline-block;
-      padding: 4px 12px;
-      background: var(--secondary);
+      padding: 5px 14px;
+      background: linear-gradient(135deg, var(--secondary) 0%, #2980b9 100%);
       color: white;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-right: 8px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 10px;
+      box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+      animation: pulse-badge 2s infinite;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    @keyframes pulse-badge {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
     }
     
     .container {
       max-width: 1200px;
       margin: 0 auto;
+      position: relative;
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     header {
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+      margin-bottom: 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      border: 1px solid rgba(52, 152, 219, 0.1);
+      border: 2px solid rgba(52, 152, 219, 0.15);
+      transition: all 0.3s ease;
+    }
+    
+    header:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .tab-content {
+      background: var(--card-bg);
+      transition: all 0.3s ease;
+    }
+    
+    .invoice-preview {
+      background: var(--card-bg);
+      transition: all 0.3s ease;
     }
     
     .logo-section {
@@ -72,17 +474,25 @@
     }
     
     .logo {
-      width: 60px;
-      height: 60px;
-      background: var(--secondary);
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--secondary) 0%, #2980b9 100%);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: bold;
-      font-size: 20px;
-      margin-left: 12px;
+      font-size: 24px;
+      margin-left: 15px;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .logo:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
     }
     
     .company-info {
@@ -91,30 +501,47 @@
     
     .company-info h1 {
       color: var(--primary);
-      margin-bottom: 3px;
-      border: 1px dashed transparent;
-      padding: 4px;
-      border-radius: 4px;
-      font-size: 1.4rem;
+      margin-bottom: 5px;
+      border: 2px dashed transparent;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      min-height: 35px;
     }
     
     .company-info h1:focus {
       border-color: var(--secondary);
       outline: none;
+      background: rgba(52, 152, 219, 0.05);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .company-info h1:hover {
+      border-color: rgba(52, 152, 219, 0.3);
     }
     
     .company-info p {
       color: #666;
-      border: 1px dashed transparent;
-      padding: 2px;
+      border: 2px dashed transparent;
+      padding: 4px 6px;
       border-radius: 4px;
-      margin-bottom: 2px;
-      font-size: 0.9rem;
+      margin-bottom: 3px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      min-height: 25px;
     }
     
     .company-info p:focus {
       border-color: var(--secondary);
       outline: none;
+      background: rgba(52, 152, 219, 0.05);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+    }
+    
+    .company-info p:hover {
+      border-color: rgba(52, 152, 219, 0.3);
     }
     
     .invoice-header {
@@ -130,39 +557,56 @@
     .tabs {
       display: flex;
       background: white;
-      border-radius: 8px 8px 0 0;
+      border-radius: 12px 12px 0 0;
       overflow: hidden;
-      box-shadow: var(--shadow);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(52, 152, 219, 0.1);
+      border-bottom: none;
     }
     
     .tab {
-      padding: 12px 20px;
+      padding: 14px 20px;
       cursor: pointer;
       background: #f8f9fa;
       border: none;
       flex: 1;
       text-align: center;
-      font-weight: bold;
-      transition: all 0.3s;
-      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      position: relative;
     }
     
     .tab.active {
-      background: var(--secondary);
+      background: linear-gradient(135deg, var(--secondary) 0%, #2980b9 100%);
       color: white;
+      box-shadow: inset 0 -3px 10px rgba(0,0,0,0.1);
     }
     
     .tab:hover:not(.active) {
       background: #e9ecef;
+      transform: translateY(-2px);
+    }
+    
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: white;
     }
     
     .tab-content {
       display: none;
       background: white;
-      padding: 20px;
-      border-radius: 0 0 8px 8px;
-      box-shadow: var(--shadow);
-      margin-bottom: 15px;
+      padding: 25px;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      border: 1px solid rgba(52, 152, 219, 0.1);
+      border-top: none;
     }
     
     .tab-content.active {
@@ -170,36 +614,57 @@
     }
     
     .section {
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #eee;
+      transition: all 0.3s ease;
     }
     
     .section:last-child {
       border-bottom: none;
+      margin-bottom: 0;
+    }
+    
+    .section:hover {
+      background: rgba(52, 152, 219, 0.02);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px -15px 25px -15px;
     }
     
     .section-title {
       color: var(--primary);
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--secondary);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--secondary);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
     }
     
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 15px;
+      position: relative;
+      transition: all 0.3s ease;
     }
     
-    label {
+    .form-group.focused {
+      transform: translateX(-5px);
+    }
+    
+    .form-group label {
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       font-weight: 600;
       color: #555;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+    
+    .form-group.focused label {
+      color: var(--secondary);
     }
     
     input[type="text"],
@@ -209,11 +674,12 @@
     select,
     textarea {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      transition: border 0.3s;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: white;
     }
     
     input:focus,
@@ -221,48 +687,84 @@
     textarea:focus {
       border-color: var(--secondary);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+      transform: translateY(-1px);
+      background: #fafbfc;
+    }
+    
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: rgba(52, 152, 219, 0.5);
     }
     
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid var(--secondary);
     }
     
     th, td {
-      border: 1px solid #ddd;
-      padding: 10px 6px;
+      border: 1px solid rgba(52, 152, 219, 0.2);
+      padding: 12px 8px;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
     
     th {
-      background-color: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: white;
       font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
     }
     
     tr:nth-child(even) {
-      background-color: #f9f9f9;
+      background-color: #f8f9fa;
     }
     
     tr:hover {
-      background-color: #f1f1f1;
+      background-color: rgba(52, 152, 219, 0.1);
+      transform: scale(1.01);
+      transition: all 0.2s ease;
+    }
+    
+    tr:first-child th:first-child {
+      border-top-right-radius: 8px;
+    }
+    
+    tr:first-child th:last-child {
+      border-top-left-radius: 8px;
     }
     
     .btn {
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     
     .btn-primary {
@@ -322,30 +824,69 @@
     
     .action-buttons {
       display: flex;
-      gap: 8px;
-      margin-top: 15px;
+      gap: 10px;
+      margin-top: 20px;
       flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .action-buttons .btn {
+      min-width: 140px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .action-buttons .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .action-buttons .btn:hover::before {
+      width: 300px;
+      height: 300px;
     }
     
     .totals-section {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 6px;
-      margin-top: 15px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      border: 2px solid var(--secondary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .total-row {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #dee2e6;
+      padding: 12px 0;
+      border-bottom: 2px solid rgba(52, 152, 219, 0.2);
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+    
+    .total-row:hover {
+      background: rgba(52, 152, 219, 0.05);
+      padding-right: 10px;
+      padding-left: 10px;
+      border-radius: 6px;
     }
     
     .total-row:last-child {
       border-bottom: none;
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 1.3rem;
       color: var(--primary);
+      padding-top: 15px;
+      margin-top: 10px;
+      border-top: 3px solid var(--secondary);
     }
     
     .delete-btn {
@@ -353,27 +894,47 @@
       border: none;
       color: var(--accent);
       cursor: pointer;
-      font-size: 16px;
+      font-size: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    .delete-btn:hover {
+      background: rgba(231, 76, 60, 0.1);
+      transform: scale(1.2) rotate(90deg);
+      color: #c0392b;
+    }
+    
+    .delete-btn:active {
+      transform: scale(1) rotate(90deg);
     }
     
     .notification {
       position: fixed;
-      top: 15px;
-      left: 15px;
-      padding: 12px 20px;
-      border-radius: 4px;
+      top: 20px;
+      left: 20px;
+      padding: 16px 24px;
+      border-radius: 10px;
       color: white;
       font-weight: 600;
       z-index: 1000;
       opacity: 0;
-      transform: translateY(-20px);
-      transition: all 0.3s;
-      font-size: 0.9rem;
+      transform: translateY(-30px) scale(0.9);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      max-width: 350px;
     }
     
     .notification.show {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
     
     .notification.success {
@@ -392,15 +953,37 @@
     }
     
     .theme-option {
-      width: 35px;
-      height: 35px;
-      border-radius: 4px;
+      width: 45px;
+      height: 45px;
+      border-radius: 8px;
       cursor: pointer;
-      border: 2px solid transparent;
+      border: 3px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .theme-option:hover {
+      transform: scale(1.15) rotate(5deg);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     
     .theme-option.active {
       border-color: var(--dark);
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .theme-option.active::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
     
     .template-selector {
@@ -411,22 +994,43 @@
     }
     
     .template-option {
-      border: 2px solid #ddd;
-      border-radius: 6px;
-      padding: 12px;
+      border: 3px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
       text-align: center;
+      background: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .template-option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .template-option:hover::before {
+      left: 100%;
     }
     
     .template-option.active {
       border-color: var(--secondary);
-      background-color: rgba(52, 152, 219, 0.1);
+      background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(52, 152, 219, 0.05) 100%);
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+      transform: scale(1.05);
     }
     
     .template-option:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      border-color: var(--secondary);
     }
     
     .template-preview {
@@ -450,13 +1054,99 @@
       width: 210mm; /* حجم A4 عمودي */
       min-height: 297mm;
       margin: 20px auto;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      border: 2px solid var(--secondary);
       page-break-after: always;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     .invoice-preview.landscape {
       width: 297mm; /* حجم A4 أفقي */
       min-height: 210mm;
+    }
+    
+    .invoice-header-preview {
+      border-bottom: 3px solid var(--secondary);
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+    }
+    
+    .invoice-header-preview h2 {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+    
+    .invoice-header-preview h3 {
+      color: var(--secondary);
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    
+    .invoice-details-preview {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+    
+    .invoice-details-preview h4 {
+      color: var(--primary);
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      border-bottom: 2px solid var(--secondary);
+      padding-bottom: 5px;
+    }
+    
+    .invoice-items-preview table {
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 2px solid var(--secondary);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .invoice-items-preview th {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .invoice-items-preview td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .invoice-items-preview tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .invoice-items-preview tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .invoice-totals-preview {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 25px;
+      border: 2px solid var(--secondary);
+    }
+    
+    .invoice-totals-preview .total-row {
+      font-size: 1.1rem;
+      padding: 10px 0;
+    }
+    
+    .invoice-totals-preview .total-row:last-child {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--primary);
+      border-top: 2px solid var(--secondary);
+      padding-top: 15px;
+      margin-top: 10px;
     }
     
     .page-break {
@@ -500,7 +1190,7 @@
     }
     
     /* تحسينات الطباعة */
-    @media print {
+      @media print {
       @page {
         size: A4;
         margin: 0;
@@ -512,7 +1202,8 @@
         margin: 0;
       }
       
-      .no-print {
+      .no-print,
+      .theme-toggle {
         display: none !important;
       }
       
@@ -560,46 +1251,271 @@
     }
     
     @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
       header {
         flex-direction: column;
         text-align: center;
+        padding: 15px;
       }
       
       .logo-section {
         margin-bottom: 12px;
         justify-content: center;
+        width: 100%;
+      }
+      
+      .company-info h1 {
+        font-size: 1.1rem;
+      }
+      
+      .company-info p {
+        font-size: 0.8rem;
       }
       
       .tabs {
-        flex-direction: column;
+        flex-direction: row;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .tab {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        min-width: fit-content;
+      }
+      
+      .tab-content {
+        padding: 15px;
       }
       
       .action-buttons {
         flex-direction: column;
+        gap: 10px;
       }
       
       .btn {
         width: 100%;
         margin-bottom: 8px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+      }
+      
+      .quick-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .quick-action-btn {
+        width: 100%;
+        padding: 10px;
       }
       
       table {
         display: block;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.75rem;
+        width: 100%;
+      }
+      
+      th, td {
+        padding: 8px 4px;
+        font-size: 0.75rem;
+        white-space: nowrap;
       }
       
       .invoice-preview {
-        width: 100%;
-        padding: 15px;
+        width: 100% !important;
+        padding: 15px !important;
+        min-height: auto !important;
+        margin: 10px auto !important;
+        border-radius: 8px;
+      }
+      
+      .invoice-header-preview {
+        flex-direction: column;
+        gap: 15px;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+      }
+      
+      .invoice-header-preview h2 {
+        font-size: 1.3rem;
+      }
+      
+      .invoice-header-preview h3 {
+        font-size: 1.1rem;
       }
       
       .invoice-details-preview,
       .invoice-totals-preview {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+        padding: 12px !important;
+      }
+      
+      .invoice-items-preview {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .invoice-items-preview table {
+        min-width: 600px;
+      }
+      
+      .invoice-totals-preview .total-row {
+        font-size: 1rem !important;
+        padding: 8px 0;
+      }
+      
+      .invoice-totals-preview .total-row:last-child {
+        font-size: 1.2rem !important;
       }
       
       .template-selector {
         grid-template-columns: 1fr;
+      }
+      
+      .form-group {
+        margin-bottom: 15px;
+      }
+      
+      input[type="text"],
+      input[type="number"],
+      input[type="date"],
+      input[type="email"],
+      select,
+      textarea {
+        padding: 12px;
+        font-size: 16px; /* منع التكبير التلقائي في iOS */
+      }
+      
+      .section-title {
+        font-size: 1rem;
+      }
+      
+      .totals-section {
+        padding: 12px;
+      }
+      
+      .theme-selector {
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      
+      header {
+        padding: 10px;
+      }
+      
+      .logo {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+      }
+      
+      .company-info h1 {
+        font-size: 1rem;
+      }
+      
+      .tab {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .tab-content {
+        padding: 10px;
+      }
+      
+      th, td {
+        padding: 6px 3px;
+        font-size: 0.7rem;
+      }
+      
+      .invoice-preview {
+        padding: 10px;
+      }
+      
+      .savedInvoicesModal > div {
+        margin: 10px;
+        padding: 15px;
+        max-height: 95vh;
+      }
+      
+      .theme-toggle {
+        width: 45px;
+        height: 45px;
+        top: 10px;
+        left: 10px;
+        font-size: 18px;
+      }
+      
+      .qr-code-top {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .company-logo-header {
+        margin-bottom: 15px;
+      }
+      
+      .company-logo-preview {
+        max-width: 120px;
+        max-height: 120px;
+      }
+      
+      .developer-contact {
+        padding: 15px;
+      }
+      
+      .developer-contact h3 {
+        font-size: 1rem;
+      }
+      
+      .whatsapp-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      
+      #quickAddModal > div {
+        margin: 10px;
+        padding: 15px;
+        max-height: 95vh;
+      }
+      
+      .quick-actions {
+        flex-direction: column;
+      }
+      
+      .quick-action-btn {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+    }
+    
+    /* تحسينات إضافية للشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .savedInvoicesModal > div {
+        margin: 10px;
+        padding: 15px;
+      }
+      
+      #savedInvoicesList > div {
+        padding: 12px !important;
+      }
+      
+      #savedInvoicesList button {
+        width: 100%;
+        margin-bottom: 8px;
       }
     }
     
@@ -631,25 +1547,33 @@
     
     .quick-actions {
       display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
+      gap: 10px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
     }
     
     .quick-action-btn {
-      padding: 8px 15px;
-      background: #f8f9fa;
-      border: 1px solid #dee2e6;
-      border-radius: 4px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
     
     .quick-action-btn:hover {
-      background: #e9ecef;
+      background: linear-gradient(135deg, var(--secondary) 0%, #2980b9 100%);
+      color: white;
+      border-color: var(--secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    }
+    
+    .quick-action-btn:active {
       transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     /* تحسينات إضافية للشركات */
@@ -683,11 +1607,19 @@
     
     /* تحسينات الأداء */
     .editable-cell {
-      transition: all 0.2s;
+      transition: all 0.2s ease;
+      border: 1px solid transparent !important;
+      background: transparent !important;
     }
     
     .editable-cell:focus {
-      background-color: #f8f9fa;
+      background-color: rgba(52, 152, 219, 0.05) !important;
+      border-color: var(--secondary) !important;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1) !important;
+    }
+    
+    .editable-cell:hover {
+      background-color: rgba(52, 152, 219, 0.02) !important;
     }
     
     /* تحسينات التحميل */
@@ -714,6 +1646,10 @@
   </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleDarkMode()" title="تبديل الوضع الليلي">
+    🌙
+  </button>
+  
   <div class="container no-print">
     <header>
       <div class="logo-section">
@@ -733,9 +1669,38 @@
     
     <div class="quick-actions">
       <button class="quick-action-btn" onclick="addRow()">➕ إضافة بند</button>
+      <button class="quick-action-btn" onclick="quickAddProduct()">⚡ إضافة سريعة</button>
       <button class="quick-action-btn" onclick="duplicateLastRow()">📋 نسخ البند الأخير</button>
       <button class="quick-action-btn" onclick="clearAllRows()">🗑️ مسح الكل</button>
       <button class="quick-action-btn" onclick="fillSampleData()">🔄 بيانات تجريبية</button>
+      <button class="quick-action-btn" onclick="loadSavedInvoices()">📂 الفواتير المحفوظة</button>
+    </div>
+    
+    <!-- نافذة الإضافة السريعة -->
+    <div id="quickAddModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3000; overflow-y: auto;">
+      <div style="background: white; margin: 20px auto; max-width: 500px; padding: 20px; border-radius: 8px; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 style="color: var(--primary); margin: 0;">⚡ إضافة منتج سريعة</h2>
+          <button class="btn btn-danger" onclick="closeQuickAddModal()" style="padding: 8px 15px;">✕ إغلاق</button>
+        </div>
+        <div class="form-group">
+          <label>اسم المنتج:</label>
+          <input type="text" id="quickProductName" placeholder="أدخل اسم المنتج" style="width: 100%; padding: 10px; margin-top: 5px;">
+        </div>
+        <div class="form-group">
+          <label>الكمية:</label>
+          <input type="number" id="quickQuantity" value="1" min="1" style="width: 100%; padding: 10px; margin-top: 5px;">
+        </div>
+        <div class="form-group">
+          <label>السعر:</label>
+          <input type="number" id="quickPrice" value="0" min="0" step="0.01" style="width: 100%; padding: 10px; margin-top: 5px;">
+        </div>
+        <div class="form-group">
+          <label>الضريبة %:</label>
+          <input type="number" id="quickTax" value="0" min="0" max="100" step="0.01" style="width: 100%; padding: 10px; margin-top: 5px;">
+        </div>
+        <button class="btn btn-success" onclick="addQuickProduct()" style="width: 100%; margin-top: 15px; padding: 12px;">➕ إضافة المنتج</button>
+      </div>
     </div>
     
     <div class="tabs">
@@ -943,6 +1908,28 @@
           <label for="logoColor">لون الشعار:</label>
           <input type="color" id="logoColor" value="#3498db" onchange="updateLogo()">
         </div>
+        
+        <div class="form-group logo-upload-container">
+          <label>رفع لوجو الشركة:</label>
+          <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)" style="margin-top: 8px;">
+          <div class="logo-preview" id="logoPreview">
+            <img id="logoPreviewImg" src="" alt="Logo Preview">
+          </div>
+          <button class="btn btn-danger" onclick="removeLogo()" style="margin-top: 8px; display: none;" id="removeLogoBtn">🗑️ إزالة اللوجو</button>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="showQRCode" onchange="updatePreview()">
+            إظهار رمز QR في أعلى الفاتورة
+          </label>
+        </div>
+        
+        <div class="form-group" id="qrCustomSection" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid var(--border-color);">
+          <label for="qrCustomLink">تخصيص رمز QR (رابط مخصص):</label>
+          <input type="text" id="qrCustomLink" placeholder="https://example.com أو اتركه فارغاً لاستخدام بيانات الفاتورة" style="margin-top: 8px; width: 100%;">
+          <p style="font-size: 0.85rem; color: #666; margin-top: 8px;">💡 اتركه فارغاً لاستخدام بيانات الفاتورة تلقائياً، أو أدخل رابط موقعك أو صفحة الدفع</p>
+        </div>
       </div>
       
       <div class="action-buttons">
@@ -968,6 +1955,18 @@
           <span id="pageCountDisplay" style="margin-right: 10px; color: var(--secondary); font-weight: bold;"></span>
         </div>
         <div class="invoice-preview" id="invoicePreview">
+          <!-- اللوجو في الأعلى -->
+          <div class="company-logo-header" id="companyLogoHeaderContainer" style="display: none;">
+            <img id="companyLogoPreview" class="company-logo-preview" src="" alt="Company Logo">
+          </div>
+          
+          <!-- QR Code في منتصف الأعلى -->
+          <div id="qrCodeTopContainer" class="qr-code-top" style="display: none;">
+            <div class="qr-code-top-center">
+              <div id="qrcodeTop"></div>
+            </div>
+          </div>
+          
           <div class="invoice-header-preview">
             <div>
               <h2 id="previewCompanyName">شركتك المفضلة</h2>
@@ -1048,12 +2047,35 @@
         <button class="btn btn-success" onclick="saveInvoice()">💾 حفظ الفاتورة</button>
         <button class="btn btn-primary" onclick="downloadAsPDF()">📄 تنزيل PDF</button>
         <button class="btn btn-outline" onclick="printInvoice()">🖨️ طباعة</button>
-        <button class="btn btn-info" onclick="saveAsImage()">📷 حفظ كصورة</button>
+        <button class="btn btn-info" onclick="saveAsImage()">📷 حفظ كصورة (PNG غير مضغوط)</button>
         <button class="btn btn-danger" onclick="clearInvoice()">🗑️ مسح الكل</button>
       </div>
     </div>
     
     <div class="notification" id="notification"></div>
+    
+    <!-- قسم التواصل مع المطور -->
+    <div class="developer-contact no-print">
+      <h3>💼 تطوير وتصميم</h3>
+      <p><strong>المطور:</strong> محمد أحمد فؤاد</p>
+      <p>للاستفسارات والدعم الفني والتطوير</p>
+      <a href="https://wa.me/201010421571" target="_blank" class="whatsapp-btn">
+        <span>📱</span>
+        <span>تواصل عبر واتساب</span>
+      </a>
+      <p style="margin-top: 15px; font-size: 0.85rem; opacity: 0.9;">رقم الواتساب: +201010421571</p>
+    </div>
+  </div>
+  
+  <!-- نافذة الفواتير المحفوظة -->
+  <div id="savedInvoicesModal" class="savedInvoicesModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3000; overflow-y: auto;">
+    <div style="background: white; margin: 20px auto; max-width: 800px; padding: 20px; border-radius: 8px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+        <h2 style="color: var(--primary); margin: 0;">الفواتير المحفوظة</h2>
+        <button class="btn btn-danger" onclick="closeSavedInvoicesModal()" style="padding: 8px 15px;">✕ إغلاق</button>
+      </div>
+      <div id="savedInvoicesList"></div>
+    </div>
   </div>
 
   <script>
@@ -1180,33 +2202,59 @@
     
     // حساب الإجمالي للسطر
     function calculateTotal(input) {
-      const row = input.parentElement.parentElement;
-      const quantity = parseFloat(row.querySelector(".quantity").value) || 0;
-      const price = parseFloat(row.querySelector(".price").value) || 0;
-      const taxRate = parseFloat(row.querySelector(".tax").value) || 0;
+      if (!input || !input.parentElement) return;
+      
+      const row = input.closest('tr');
+      if (!row) return;
+      
+      const quantityInput = row.querySelector(".quantity");
+      const priceInput = row.querySelector(".price");
+      const taxInput = row.querySelector(".tax");
+      const totalCell = row.querySelector(".lineTotal");
+      
+      if (!quantityInput || !priceInput || !taxInput || !totalCell) return;
+      
+      const quantity = parseFloat(quantityInput.value) || 0;
+      const price = parseFloat(priceInput.value) || 0;
+      const taxRate = parseFloat(taxInput.value) || 0;
       
       const subtotal = quantity * price;
       const taxAmount = subtotal * (taxRate / 100);
       const total = subtotal + taxAmount;
       
-      row.querySelector(".lineTotal").textContent = total.toFixed(2);
-      updateTotals();
+      totalCell.textContent = total.toFixed(2);
+      debouncedUpdateTotals();
     }
     
     // تحديث الإجماليات (تجاهل البنود بدون منتج)
     function updateTotals() {
       let subtotal = 0, taxTotal = 0;
       
-      document.querySelectorAll("#itemsBody tr").forEach(row => {
+      const itemsBody = document.getElementById("itemsBody");
+      if (!itemsBody) return;
+      
+      const rows = itemsBody.querySelectorAll("tr");
+      rows.forEach(row => {
+        if (!row || !row.cells || row.cells.length < 6) return;
+        
         // تجاهل البنود التي لا تحتوي على منتج
-        const product = row.cells[1].querySelector("input")?.value.trim();
+        const productInput = row.cells[1]?.querySelector("input");
+        if (!productInput) return;
+        
+        const product = productInput.value.trim();
         if (!product) {
           return;
         }
         
-        const quantity = parseFloat(row.querySelector(".quantity").value) || 0;
-        const price = parseFloat(row.querySelector(".price").value) || 0;
-        const taxRate = parseFloat(row.querySelector(".tax").value) || 0;
+        const quantityInput = row.querySelector(".quantity");
+        const priceInput = row.querySelector(".price");
+        const taxInput = row.querySelector(".tax");
+        
+        if (!quantityInput || !priceInput || !taxInput) return;
+        
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const price = parseFloat(priceInput.value) || 0;
+        const taxRate = parseFloat(taxInput.value) || 0;
         
         const lineSubtotal = quantity * price;
         const lineTax = lineSubtotal * (taxRate / 100);
@@ -1215,12 +2263,17 @@
         taxTotal += lineTax;
       });
       
-      const shippingCost = parseFloat(document.getElementById("shippingCost").value) || 0;
+      const shippingInput = document.getElementById("shippingCost");
+      const shippingCost = shippingInput ? parseFloat(shippingInput.value) || 0 : 0;
       const grandTotal = subtotal + taxTotal + shippingCost;
       
-      document.getElementById("subtotal").textContent = subtotal.toFixed(2);
-      document.getElementById("taxTotal").textContent = taxTotal.toFixed(2);
-      document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
+      const subtotalEl = document.getElementById("subtotal");
+      const taxTotalEl = document.getElementById("taxTotal");
+      const grandTotalEl = document.getElementById("grandTotal");
+      
+      if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+      if (taxTotalEl) taxTotalEl.textContent = taxTotal.toFixed(2);
+      if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
       
       // تحديث عدد الصفحات
       updatePageCount();
@@ -1611,7 +2664,9 @@
             }
           }, 500);
         }).catch(error => {
-          console.error('Error printing:', error);
+          if (error) {
+            console.error('Error printing:', error);
+          }
           showNotification('حدث خطأ أثناء الطباعة', 'error');
           if (preview.contains(printMessage)) {
             preview.removeChild(printMessage);
@@ -1760,26 +2815,42 @@
         pdf.save(`فاتورة-${invoiceNumber}.pdf`);
         showNotification('تم تنزيل PDF بنجاح', 'success');
       }).catch(error => {
-        console.error('Error creating PDF:', error);
+        if (error) {
+          console.error('Error creating PDF:', error);
+        }
         showNotification('حدث خطأ أثناء إنشاء PDF', 'error');
       });
     }
     
     // حفظ الفاتورة كصورة (عدة صفحات كصور منفصلة)
     function saveAsImage() {
-      // عرض رسالة التحميل
+      // التحقق من وجود بنود
+      const itemsPerPage = parseInt(document.getElementById('itemsPerPage').value) || 15;
+      const pages = splitInvoiceIntoPages();
+      const totalPages = pages.length;
+      
+      if (totalPages === 0) {
+        showNotification('لا توجد بنود في الفاتورة', 'error');
+        return;
+      }
+      
+      // عرض رسالة التحميل مع شريط التقدم
       const loadingDiv = document.createElement('div');
       loadingDiv.className = 'image-saving';
-      loadingDiv.innerHTML = 'جاري تحويل الفاتورة إلى صور...';
+      loadingDiv.innerHTML = `
+        <div style="text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 15px;">⏳</div>
+          <div style="font-size: 1.1rem; margin-bottom: 10px;">جاري تحويل الفاتورة إلى صور...</div>
+          <div id="imageProgress" style="font-size: 0.9rem; color: #ccc;">0 / ${totalPages}</div>
+        </div>
+      `;
       document.body.appendChild(loadingDiv);
       
       updatePreview();
       
-      const itemsPerPage = parseInt(document.getElementById('itemsPerPage').value) || 15;
-      const pages = splitInvoiceIntoPages();
-      const totalPages = pages.length;
       const invoiceNumber = document.getElementById('invoiceNumberDisplay').textContent;
-      
+      const orientation = document.getElementById('pageOrientation').value;
+      const isLandscape = orientation === 'landscape';
       let completedPages = 0;
       
       // دالة لإنشاء صورة لصفحة واحدة
@@ -1789,9 +2860,11 @@
           const tempDiv = document.createElement('div');
           tempDiv.style.position = 'absolute';
           tempDiv.style.left = '-9999px';
-          tempDiv.style.width = document.getElementById('pageOrientation').value === 'landscape' ? '297mm' : '210mm';
+          tempDiv.style.width = isLandscape ? '297mm' : '210mm';
+          tempDiv.style.minHeight = isLandscape ? '210mm' : '297mm';
           tempDiv.style.background = 'white';
           tempDiv.style.padding = '30px';
+          tempDiv.style.boxSizing = 'border-box';
           document.body.appendChild(tempDiv);
           
           // نسخ محتوى الفاتورة
@@ -1825,10 +2898,15 @@
           
           // تحديث الإجماليات (في الصفحة الأخيرة فقط)
           if (pageIndex === totalPages - 1) {
-            clonedPreview.querySelector('#previewSubtotal').textContent = document.getElementById('subtotal').textContent;
-            clonedPreview.querySelector('#previewTaxTotal').textContent = document.getElementById('taxTotal').textContent;
-            clonedPreview.querySelector('#previewShipping').textContent = document.getElementById('shippingCost').value || '0.00';
-            clonedPreview.querySelector('#previewGrandTotal').textContent = document.getElementById('grandTotal').textContent;
+            const subtotalEl = clonedPreview.querySelector('#previewSubtotal');
+            const taxEl = clonedPreview.querySelector('#previewTaxTotal');
+            const shippingEl = clonedPreview.querySelector('#previewShipping');
+            const grandTotalEl = clonedPreview.querySelector('#previewGrandTotal');
+            
+            if (subtotalEl) subtotalEl.textContent = document.getElementById('subtotal').textContent;
+            if (taxEl) taxEl.textContent = document.getElementById('taxTotal').textContent;
+            if (shippingEl) shippingEl.textContent = document.getElementById('shippingCost').value || '0.00';
+            if (grandTotalEl) grandTotalEl.textContent = document.getElementById('grandTotal').textContent;
           } else {
             // إخفاء الإجماليات في الصفحات غير الأخيرة
             const totalsSection = clonedPreview.querySelector('.invoice-totals-preview');
@@ -1842,60 +2920,109 @@
           pageNumDiv.style.textAlign = 'center';
           pageNumDiv.style.marginTop = '20px';
           pageNumDiv.style.fontSize = '12px';
+          pageNumDiv.style.color = '#666';
           pageNumDiv.textContent = `صفحة ${pageIndex + 1} من ${totalPages}`;
           clonedPreview.appendChild(pageNumDiv);
           
           tempDiv.appendChild(clonedPreview);
           
+          // انتظار قصير لضمان تحميل الصور
           setTimeout(() => {
             html2canvas(clonedPreview, {
               scale: 2,
-          useCORS: true,
-          logging: false,
+              useCORS: true,
+              allowTaint: true,
+              logging: false,
               backgroundColor: '#ffffff',
               width: clonedPreview.offsetWidth,
-              height: clonedPreview.offsetHeight
-        }).then(canvas => {
-              // تحويل Canvas إلى صورة
-              const image = canvas.toDataURL('image/png');
-              
-              // إنشاء رابط تحميل
-              const link = document.createElement('a');
-              link.href = image;
-              link.download = `فاتورة-${invoiceNumber}-صفحة-${pageIndex + 1}.png`;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              
-              document.body.removeChild(tempDiv);
-              completedPages++;
-              
-              if (completedPages === totalPages) {
-                document.body.removeChild(loadingDiv);
-                showNotification(`تم حفظ ${totalPages} صفحة كصور منفصلة بنجاح`, 'success');
+              height: clonedPreview.offsetHeight,
+              windowWidth: clonedPreview.scrollWidth,
+              windowHeight: clonedPreview.scrollHeight
+            }).then(canvas => {
+              try {
+                // تحويل Canvas إلى صورة PNG غير مضغوطة (جودة عالية)
+                const image = canvas.toDataURL('image/png', 1.0);
+                
+                // تحويل base64 إلى Blob غير مضغوط
+                const byteString = atob(image.split(',')[1]);
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                  ia[i] = byteString.charCodeAt(i);
+                }
+                const blob = new Blob([ab], { type: 'image/png' });
+                
+                // إنشاء رابط تحميل مباشر (غير مضغوط)
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `فاتورة-${invoiceNumber}-صفحة-${pageIndex + 1}.png`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                
+                // تنظيف
+                setTimeout(() => {
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+                }, 100);
+                
+                document.body.removeChild(tempDiv);
+                completedPages++;
+                
+                // تحديث شريط التقدم
+                const progressEl = document.getElementById('imageProgress');
+                if (progressEl) {
+                  progressEl.textContent = `${completedPages} / ${totalPages}`;
+                }
+                
+                if (completedPages === totalPages) {
+                  setTimeout(() => {
+                    document.body.removeChild(loadingDiv);
+                    showNotification(`✅ تم حفظ ${totalPages} صفحة كصور PNG غير مضغوطة بنجاح`, 'success');
+                  }, 500);
+                }
+                
+                resolve();
+              } catch (error) {
+                document.body.removeChild(tempDiv);
+                reject(error);
               }
-              
-              resolve();
-        }).catch(error => {
+            }).catch(error => {
+              if (error) {
+                console.error('Error creating canvas:', error);
+              }
               document.body.removeChild(tempDiv);
               reject(error);
             });
-          }, 500);
+          }, 800); // زيادة الوقت لضمان تحميل الصور
         });
       }
       
-      // إنشاء صور لجميع الصفحات (مع تأخير بين كل صورة)
-      pages.forEach((items, index) => {
-        setTimeout(() => {
-          createPageImage(index, items).catch(error => {
-            console.error('Error saving image:', error);
-            if (index === pages.length - 1) {
-              document.body.removeChild(loadingDiv);
+      // إنشاء صور لجميع الصفحات بشكل متسلسل
+      async function processPages() {
+        for (let index = 0; index < pages.length; index++) {
+          try {
+            await createPageImage(index, pages[index]);
+            // تأخير قصير بين الصور لتجنب مشاكل المتصفح
+            if (index < pages.length - 1) {
+              await new Promise(resolve => setTimeout(resolve, 300));
+            }
+          } catch (error) {
+            if (error) {
+              console.error(`Error saving page ${index + 1}:`, error);
+            }
+            if (index === pages.length - 1 || completedPages === 0) {
+              if (document.body.contains(loadingDiv)) {
+                document.body.removeChild(loadingDiv);
+              }
               showNotification('حدث خطأ أثناء حفظ الصور', 'error');
             }
-          });
-        }, index * 1000); // تأخير ثانية واحدة بين كل صورة
-      });
+          }
+        }
+      }
+      
+      processPages();
     }
     
     // مسح جميع البيانات
@@ -1982,32 +3109,59 @@
     }
     
     // تحديث بيانات الشركة عند التعديل
-    document.getElementById('companyName').addEventListener('input', function() {
-      document.getElementById('previewCompanyName').textContent = this.textContent;
-    });
+    const companyNameEl = document.getElementById('companyName');
+    const companyDescriptionEl = document.getElementById('companyDescription');
+    const companyAddressEl = document.getElementById('companyAddress');
+    const companyContactEl = document.getElementById('companyContact');
     
-    document.getElementById('companyDescription').addEventListener('input', function() {
-      document.getElementById('previewCompanyDescription').textContent = this.textContent;
-    });
+    if (companyNameEl) {
+      companyNameEl.addEventListener('input', function() {
+        const previewEl = document.getElementById('previewCompanyName');
+        if (previewEl) previewEl.textContent = this.textContent;
+      });
+    }
     
-    document.getElementById('companyAddress').addEventListener('input', function() {
-      document.getElementById('previewCompanyAddress').textContent = this.textContent;
-    });
+    if (companyDescriptionEl) {
+      companyDescriptionEl.addEventListener('input', function() {
+        const previewEl = document.getElementById('previewCompanyDescription');
+        if (previewEl) previewEl.textContent = this.textContent;
+      });
+    }
     
-    document.getElementById('companyContact').addEventListener('input', function() {
-      document.getElementById('previewCompanyContact').textContent = this.textContent;
-    });
+    if (companyAddressEl) {
+      companyAddressEl.addEventListener('input', function() {
+        const previewEl = document.getElementById('previewCompanyAddress');
+        if (previewEl) previewEl.textContent = this.textContent;
+      });
+    }
     
-    // تحديث تلقائي للمعاينة عند تغيير البيانات
-    document.getElementById('invoiceDate').addEventListener('change', updatePreview);
-    document.getElementById('dueDate').addEventListener('change', updatePreview);
-    document.getElementById('clientName').addEventListener('input', updatePreview);
-    document.getElementById('clientEmail').addEventListener('input', updatePreview);
-    document.getElementById('clientPhone').addEventListener('input', updatePreview);
-    document.getElementById('clientAddress').addEventListener('input', updatePreview);
+    if (companyContactEl) {
+      companyContactEl.addEventListener('input', function() {
+        const previewEl = document.getElementById('previewCompanyContact');
+        if (previewEl) previewEl.textContent = this.textContent;
+      });
+    }
+    
+    // تحديث تلقائي للمعاينة عند تغيير البيانات (مع debounce)
+    const invoiceDateEl = document.getElementById('invoiceDate');
+    const dueDateEl = document.getElementById('dueDate');
+    const clientNameEl = document.getElementById('clientName');
+    const clientEmailEl = document.getElementById('clientEmail');
+    const clientPhoneEl = document.getElementById('clientPhone');
+    const clientAddressEl = document.getElementById('clientAddress');
+    
+    if (invoiceDateEl) invoiceDateEl.addEventListener('change', debouncedUpdatePreview);
+    if (dueDateEl) dueDateEl.addEventListener('change', debouncedUpdatePreview);
+    if (clientNameEl) clientNameEl.addEventListener('input', debouncedUpdatePreview);
+    if (clientEmailEl) clientEmailEl.addEventListener('input', debouncedUpdatePreview);
+    if (clientPhoneEl) clientPhoneEl.addEventListener('input', debouncedUpdatePreview);
+    if (clientAddressEl) clientAddressEl.addEventListener('input', debouncedUpdatePreview);
     
     // تحديث عدد الصفحات عند تغيير البنود
-    document.getElementById('itemsPerPage').addEventListener('input', updatePageCount);
+    const itemsPerPageEl = document.getElementById('itemsPerPage');
+    if (itemsPerPageEl) {
+      itemsPerPageEl.addEventListener('input', updatePageCount);
+    }
     
     // تحديث عدد الصفحات عند إضافة/حذف/تعديل البنود
     const itemsBody = document.getElementById('itemsBody');
@@ -2018,11 +3172,11 @@
       observer.observe(itemsBody, { childList: true, subtree: true });
     }
     
-    // تحديث عدد الصفحات عند تغيير المنتج
+    // تحديث عدد الصفحات عند تغيير المنتج (مع debounce)
     document.addEventListener('input', function(e) {
       if (e.target.classList.contains('editable-cell') && e.target.closest('#itemsBody')) {
         updatePageCount();
-        updateTotals();
+        debouncedUpdateTotals();
       }
     });
     
@@ -2036,13 +3190,677 @@
     }
     
     // تحديث رقم الفاتورة عند التحميل
-    document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
-    document.getElementById('previewInvoiceNumber').textContent = document.getElementById('invoiceNumberDisplay').textContent;
+    const invoiceNumberDisplayEl = document.getElementById('invoiceNumberDisplay');
+    const previewInvoiceNumberEl = document.getElementById('previewInvoiceNumber');
+    
+    if (invoiceNumberDisplayEl) {
+      invoiceNumberDisplayEl.textContent = generateInvoiceNumber();
+      if (previewInvoiceNumberEl) {
+        previewInvoiceNumberEl.textContent = invoiceNumberDisplayEl.textContent;
+      }
+    }
+    
+    // تحميل الوضع الليلي
+    try {
+      if (typeof loadDarkMode === 'function') {
+        loadDarkMode();
+      }
+    } catch (e) {
+      // Silent error
+    }
+    
+    // تحميل البيانات المحفوظة تلقائياً
+    try {
+      if (typeof loadAutoSaveData === 'function') {
+        loadAutoSaveData();
+      }
+    } catch (e) {
+      // Silent error
+    }
+    
+    // حفظ تلقائي كل 30 ثانية
+    try {
+      if (typeof autoSaveData === 'function') {
+        setInterval(autoSaveData, 30000);
+        
+        // حفظ عند إغلاق الصفحة
+        window.addEventListener('beforeunload', function() {
+          try {
+            autoSaveData();
+          } catch (e) {
+            // Silent error
+          }
+        });
+        
+        // حفظ عند تغيير التبويب
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            try {
+              autoSaveData();
+            } catch (e) {
+              // Silent error
+            }
+          }
+        });
+      }
+    } catch (e) {
+      // Silent error
+    }
     
     // تحديث عدد الصفحات عند التحميل
     setTimeout(() => {
-      updatePageCount();
+      try {
+        if (typeof updatePageCount === 'function') {
+          updatePageCount();
+        }
+      } catch (e) {
+        // Silent error
+      }
     }, 500);
+    
+    // تحسينات إضافية للتفاعلية
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initInteractiveFeatures);
+    } else {
+      initInteractiveFeatures();
+    }
+    
+    function initInteractiveFeatures() {
+      try {
+        // إضافة تأثيرات على العناصر عند التحميل
+        const elements = document.querySelectorAll('.tab-content, .section, .btn');
+        elements.forEach((el, index) => {
+          if (el) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+              if (el) {
+                el.style.transition = 'all 0.5s ease';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+              }
+            }, index * 50);
+          }
+        });
+        
+        // تحسين تجربة الإدخال
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+          if (input) {
+            // إضافة تأثير focus محسّن
+            input.addEventListener('focus', function() {
+              if (this.parentElement) {
+                this.parentElement.classList.add('focused');
+              }
+            });
+            
+            input.addEventListener('blur', function() {
+              if (this.parentElement) {
+                this.parentElement.classList.remove('focused');
+              }
+            });
+          }
+        });
+      } catch (e) {
+        // Silent error
+      }
+    }
+    
+    // إضافة منتج سريع
+    function quickAddProduct() {
+      const modal = document.getElementById('quickAddModal');
+      const productInput = document.getElementById('quickProductName');
+      if (modal) {
+        modal.style.display = 'block';
+        if (productInput) {
+          setTimeout(() => productInput.focus(), 100);
+        }
+      }
+    }
+    
+    function closeQuickAddModal() {
+      const modal = document.getElementById('quickAddModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+      // مسح الحقول
+      const productInput = document.getElementById('quickProductName');
+      const quantityInput = document.getElementById('quickQuantity');
+      const priceInput = document.getElementById('quickPrice');
+      const taxInput = document.getElementById('quickTax');
+      
+      if (productInput) productInput.value = '';
+      if (quantityInput) quantityInput.value = '1';
+      if (priceInput) priceInput.value = '0';
+      if (taxInput) taxInput.value = '0';
+    }
+    
+    function addQuickProduct() {
+      const productInput = document.getElementById('quickProductName');
+      const quantityInput = document.getElementById('quickQuantity');
+      const priceInput = document.getElementById('quickPrice');
+      const taxInput = document.getElementById('quickTax');
+      
+      if (!productInput || !quantityInput || !priceInput || !taxInput) {
+        showNotification('حدث خطأ في النموذج', 'error');
+        return;
+      }
+      
+      const product = productInput.value.trim();
+      const quantity = quantityInput.value;
+      const price = priceInput.value;
+      const tax = taxInput.value;
+      
+      if (!product) {
+        showNotification('يرجى إدخال اسم المنتج', 'error');
+        productInput.focus();
+        return;
+      }
+      
+      // إضافة المنتج
+      const table = document.getElementById("itemsBody");
+      if (!table) {
+        showNotification('حدث خطأ في الجدول', 'error');
+        return;
+      }
+      
+      const rowCount = table.rows.length + 1;
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${rowCount}</td>
+        <td><input type="text" value="${escapeHtml(product)}" class="product editable-cell" required></td>
+        <td><input type="number" class="quantity editable-cell" value="${quantity}" min="1" oninput="calculateTotal(this)"></td>
+        <td><input type="number" class="price editable-cell" value="${price}" min="0" step="0.01" oninput="calculateTotal(this)"></td>
+        <td><input type="number" class="tax editable-cell" value="${tax}" min="0" max="100" step="0.01" oninput="calculateTotal(this)"></td>
+        <td class="lineTotal">0.00</td>
+        <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+      `;
+      table.appendChild(row);
+      
+      const quantityEl = row.querySelector('.quantity');
+      if (quantityEl) {
+        calculateTotal(quantityEl);
+      }
+      
+      closeQuickAddModal();
+      showNotification('تم إضافة المنتج بنجاح', 'success');
+    }
+    
+    // دالة لتجنب XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // حفظ تلقائي للبيانات
+    function autoSaveData() {
+      try {
+        const invoiceData = {
+          client: {
+            name: document.getElementById('clientName').value,
+            email: document.getElementById('clientEmail').value,
+            phone: document.getElementById('clientPhone').value,
+            address: document.getElementById('clientAddress').value
+          },
+          invoice: {
+            date: document.getElementById('invoiceDate').value,
+            dueDate: document.getElementById('dueDate').value,
+            dealDetails: document.getElementById('dealDetails').value
+          },
+          items: [],
+          payment: {
+            method: document.getElementById('paymentMethod').value,
+            date: document.getElementById('paymentDate').value,
+            reference: document.getElementById('paymentReference').value
+          },
+          shipping: {
+            address: document.getElementById('shippingAddress').value,
+            method: document.getElementById('shippingMethod').value,
+            cost: document.getElementById('shippingCost').value
+          },
+          company: {
+            name: document.getElementById('companyName').textContent,
+            description: document.getElementById('companyDescription').textContent,
+            address: document.getElementById('companyAddress').textContent,
+            contact: document.getElementById('companyContact').textContent
+          },
+          savedAt: new Date().toISOString()
+        };
+        
+        // جمع البنود
+        document.querySelectorAll("#itemsBody tr").forEach(row => {
+          const product = row.cells[1].querySelector("input")?.value.trim();
+          if (product) {
+            invoiceData.items.push({
+              product: product,
+              quantity: row.cells[2].querySelector("input").value,
+              price: row.cells[3].querySelector("input").value,
+              tax: row.cells[4].querySelector("input").value,
+              total: row.cells[5].textContent
+            });
+          }
+        });
+        
+        localStorage.setItem('autoSaveInvoice', JSON.stringify(invoiceData));
+      } catch (e) {
+        // Silent error handling - don't interrupt user experience
+        if (e && typeof console !== 'undefined' && console.error) {
+          console.error('Error auto-saving:', e);
+        }
+      }
+    }
+    
+    // تحميل البيانات المحفوظة تلقائياً
+    function loadAutoSaveData() {
+      try {
+        const saved = localStorage.getItem('autoSaveInvoice');
+        if (saved) {
+          const data = JSON.parse(saved);
+          
+          // تحميل بيانات العميل
+          if (data.client) {
+            document.getElementById('clientName').value = data.client.name || '';
+            document.getElementById('clientEmail').value = data.client.email || '';
+            document.getElementById('clientPhone').value = data.client.phone || '';
+            document.getElementById('clientAddress').value = data.client.address || '';
+          }
+          
+          // تحميل بيانات الفاتورة
+          if (data.invoice) {
+            if (data.invoice.date) document.getElementById('invoiceDate').value = data.invoice.date;
+            if (data.invoice.dueDate) document.getElementById('dueDate').value = data.invoice.dueDate;
+            if (data.invoice.dealDetails) document.getElementById('dealDetails').value = data.invoice.dealDetails;
+          }
+          
+          // تحميل البنود
+          if (data.items && data.items.length > 0) {
+            const itemsBody = document.getElementById('itemsBody');
+            itemsBody.innerHTML = '';
+            data.items.forEach((item, index) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${index + 1}</td>
+                <td><input type="text" value="${item.product}" class="product editable-cell" required></td>
+                <td><input type="number" class="quantity editable-cell" value="${item.quantity}" min="1" oninput="calculateTotal(this)"></td>
+                <td><input type="number" class="price editable-cell" value="${item.price}" min="0" step="0.01" oninput="calculateTotal(this)"></td>
+                <td><input type="number" class="tax editable-cell" value="${item.tax}" min="0" max="100" step="0.01" oninput="calculateTotal(this)"></td>
+                <td class="lineTotal">${item.total}</td>
+                <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+              `;
+              itemsBody.appendChild(row);
+            });
+            updateTotals();
+          }
+          
+          // تحميل بيانات الدفع
+          if (data.payment) {
+            document.getElementById('paymentMethod').value = data.payment.method || '';
+            document.getElementById('paymentDate').value = data.payment.date || '';
+            document.getElementById('paymentReference').value = data.payment.reference || '';
+          }
+          
+          // تحميل بيانات الشحن
+          if (data.shipping) {
+            document.getElementById('shippingAddress').value = data.shipping.address || '';
+            document.getElementById('shippingMethod').value = data.shipping.method || '';
+            document.getElementById('shippingCost').value = data.shipping.cost || '0';
+          }
+          
+          // تحميل بيانات الشركة
+          if (data.company) {
+            document.getElementById('companyName').textContent = data.company.name || 'شركتك المفضلة';
+            document.getElementById('companyDescription').textContent = data.company.description || 'وصف شركتك يظهر هنا';
+            document.getElementById('companyAddress').textContent = data.company.address || 'عنوان شركتك';
+            document.getElementById('companyContact').textContent = data.company.contact || 'هاتف: 0123456789 | البريد: info@company.com';
+          }
+          
+          showNotification('تم تحميل البيانات المحفوظة تلقائياً', 'success');
+        }
+      } catch (e) {
+        // Silent error handling
+        if (e && typeof console !== 'undefined' && console.error) {
+          console.error('Error loading auto-save data:', e);
+        }
+      }
+    }
+    
+    // إغلاق نافذة الإضافة السريعة عند النقر خارجها
+    const quickAddModalEl = document.getElementById('quickAddModal');
+    if (quickAddModalEl) {
+      quickAddModalEl.addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeQuickAddModal();
+        }
+      });
+    }
+    
+    // إضافة Enter للإضافة السريعة
+    const quickProductNameEl = document.getElementById('quickProductName');
+    if (quickProductNameEl) {
+      quickProductNameEl.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addQuickProduct();
+        }
+      });
+    }
+    
+    // متغيرات عامة
+    let uploadedLogo = null;
+    
+    // تحسينات الأداء - Debounce function
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+    
+    // تحسين تحديث المعاينة
+    const debouncedUpdatePreview = debounce(updatePreview, 300);
+    
+    // تحسين تحديث الإجماليات
+    const debouncedUpdateTotals = debounce(updateTotals, 200);
+    
+    // تبديل الوضع الليلي
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDark);
+      const toggleBtn = document.querySelector('.theme-toggle');
+      toggleBtn.textContent = isDark ? '☀️' : '🌙';
+    }
+    
+    // تحميل الوضع الليلي من localStorage
+    function loadDarkMode() {
+      const savedMode = localStorage.getItem('darkMode') === 'true';
+      if (savedMode) {
+        document.body.classList.add('dark-mode');
+        document.querySelector('.theme-toggle').textContent = '☀️';
+      }
+    }
+    
+    // رفع اللوجو
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedLogo = e.target.result;
+          document.getElementById('logoPreviewImg').src = uploadedLogo;
+          document.getElementById('logoPreview').style.display = 'block';
+          document.getElementById('removeLogoBtn').style.display = 'inline-block';
+          updatePreview();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    
+    // إزالة اللوجو
+    function removeLogo() {
+      uploadedLogo = null;
+      document.getElementById('logoUpload').value = '';
+      document.getElementById('logoPreview').style.display = 'none';
+      document.getElementById('removeLogoBtn').style.display = 'none';
+      updatePreview();
+    }
+    
+    // تحديث معاينة الفاتورة مع QR Code في الأعلى
+    function updateQRCode() {
+      const showQRCB = document.getElementById('showQRCode');
+      const qrCustomSection = document.getElementById('qrCustomSection');
+      const qrTopContainer = document.getElementById('qrCodeTopContainer');
+      const qrDiv = document.getElementById('qrcodeTop');
+      const qrCustomLinkEl = document.getElementById('qrCustomLink');
+      
+      if (!showQRCB || !qrTopContainer || !qrDiv) return;
+      
+      const showQR = showQRCB.checked;
+      const customLink = qrCustomLinkEl ? qrCustomLinkEl.value.trim() : '';
+      
+      // إظهار/إخفاء قسم التخصيص
+      if (qrCustomSection) {
+        qrCustomSection.style.display = showQR ? 'block' : 'none';
+      }
+      
+      if (showQR) {
+        qrTopContainer.style.display = 'flex';
+        qrDiv.innerHTML = '';
+        
+        // تحديد بيانات QR Code
+        let qrData;
+        if (customLink) {
+          // استخدام الرابط المخصص
+          qrData = customLink;
+        } else {
+          // استخدام بيانات الفاتورة
+          const invoiceNumberEl = document.getElementById('invoiceNumberDisplay');
+          const invoiceDateEl = document.getElementById('invoiceDate');
+          const clientNameEl = document.getElementById('clientName');
+          const grandTotalEl = document.getElementById('grandTotal');
+          
+          const invoiceData = {
+            number: invoiceNumberEl ? invoiceNumberEl.textContent : '',
+            date: invoiceDateEl ? invoiceDateEl.value : '',
+            client: clientNameEl ? clientNameEl.value : '',
+            total: grandTotalEl ? grandTotalEl.textContent : ''
+          };
+          qrData = JSON.stringify(invoiceData);
+        }
+        
+        // استخدام API لإنشاء QR Code
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}&ecc=M`;
+        qrDiv.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="max-width: 150px; height: auto;" loading="lazy">`;
+      } else {
+        qrTopContainer.style.display = 'none';
+      }
+      
+      // تحديث اللوجو في المعاينة
+      updateLogoInPreview();
+    }
+    
+    // تحديث اللوجو في المعاينة
+    function updateLogoInPreview() {
+      const logoHeaderContainer = document.getElementById('companyLogoHeaderContainer');
+      const logoPreview = document.getElementById('companyLogoPreview');
+      
+      if (!logoHeaderContainer || !logoPreview) return;
+      
+      if (uploadedLogo) {
+        logoPreview.src = uploadedLogo;
+        logoHeaderContainer.style.display = 'block';
+      } else {
+        logoHeaderContainer.style.display = 'none';
+      }
+    }
+    
+    // تحديث دالة updatePreview لتشمل QR Code واللوجو
+    const originalUpdatePreview = updatePreview;
+    updatePreview = function() {
+      try {
+        if (typeof originalUpdatePreview === 'function') {
+          originalUpdatePreview();
+        }
+        updateQRCode();
+        updateLogoInPreview();
+      } catch (e) {
+        // Silent error
+      }
+    };
+    
+    // تحديث عند تغيير رابط QR المخصص
+    const qrCustomLinkEl = document.getElementById('qrCustomLink');
+    if (qrCustomLinkEl) {
+      qrCustomLinkEl.addEventListener('input', function() {
+        const showQRCB = document.getElementById('showQRCode');
+        if (showQRCB && showQRCB.checked) {
+          updateQRCode();
+        }
+      });
+    }
+    
+    // تحديث عند تفعيل/إلغاء تفعيل QR Code
+    const showQRCB = document.getElementById('showQRCode');
+    if (showQRCB) {
+      showQRCB.addEventListener('change', function() {
+        updateQRCode();
+      });
+    }
+    
+    // تحسينات تفاعلية إضافية
+    document.addEventListener('DOMContentLoaded', function() {
+      // إضافة تأثيرات تفاعلية على الأزرار
+      const buttons = document.querySelectorAll('.btn, .quick-action-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-2px)';
+        });
+        btn.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+      
+      // تحسين تجربة الإدخال
+      const inputs = document.querySelectorAll('input, textarea, select');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          this.style.borderColor = 'var(--secondary)';
+          this.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.1)';
+        });
+        input.addEventListener('blur', function() {
+          this.style.borderColor = '';
+          this.style.boxShadow = '';
+        });
+      });
+    });
+    
+    // عرض الفواتير المحفوظة
+    function loadSavedInvoices() {
+      const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
+      const modal = document.getElementById('savedInvoicesModal');
+      const list = document.getElementById('savedInvoicesList');
+      
+      if (savedInvoices.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">لا توجد فواتير محفوظة</p>';
+      } else {
+        list.innerHTML = savedInvoices.reverse().map((invoice, index) => {
+          const date = new Date(invoice.savedAt).toLocaleDateString('ar-SA');
+          const originalIndex = savedInvoices.length - 1 - index;
+          return `
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 15px; margin-bottom: 15px; background: #f9f9f9;">
+              <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
+                <div style="flex: 1; min-width: 200px;">
+                  <h3 style="color: var(--primary); margin-bottom: 8px; font-size: 1.1rem;">${invoice.invoiceNumber}</h3>
+                  <p style="color: #666; margin: 4px 0;"><strong>العميل:</strong> ${invoice.client.name || '-'}</p>
+                  <p style="color: #666; margin: 4px 0;"><strong>التاريخ:</strong> ${invoice.invoiceDate || '-'}</p>
+                  <p style="color: #666; margin: 4px 0;"><strong>الإجمالي:</strong> ${invoice.totals.grandTotal} ريال</p>
+                  <p style="color: #999; font-size: 0.85rem; margin-top: 8px;">محفوظة في: ${date}</p>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                  <button class="btn btn-primary" onclick="loadInvoice(${originalIndex})" style="padding: 8px 15px; font-size: 0.85rem; white-space: nowrap;">📂 تحميل</button>
+                  <button class="btn btn-danger" onclick="deleteSavedInvoice(${originalIndex})" style="padding: 8px 15px; font-size: 0.85rem; white-space: nowrap;">🗑️ حذف</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      modal.style.display = 'block';
+    }
+    
+    // إغلاق نافذة الفواتير المحفوظة
+    function closeSavedInvoicesModal() {
+      document.getElementById('savedInvoicesModal').style.display = 'none';
+    }
+    
+    // تحميل فاتورة محفوظة
+    function loadInvoice(index) {
+      const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
+      if (index >= 0 && index < savedInvoices.length) {
+        const invoice = savedInvoices[index];
+        
+        // تحميل بيانات الشركة
+        document.getElementById('companyName').textContent = invoice.company.name;
+        document.getElementById('companyDescription').textContent = invoice.company.description;
+        document.getElementById('companyAddress').textContent = invoice.company.address;
+        document.getElementById('companyContact').textContent = invoice.company.contact;
+        
+        // تحميل بيانات العميل
+        document.getElementById('clientName').value = invoice.client.name;
+        document.getElementById('clientEmail').value = invoice.client.email;
+        document.getElementById('clientPhone').value = invoice.client.phone;
+        document.getElementById('clientAddress').value = invoice.client.address;
+        
+        // تحميل بيانات الفاتورة
+        document.getElementById('invoiceDate').value = invoice.invoiceDate;
+        document.getElementById('dueDate').value = invoice.dueDate;
+        document.getElementById('invoiceNumberDisplay').textContent = invoice.invoiceNumber;
+        document.getElementById('pageOrientation').value = invoice.pageOrientation || 'portrait';
+        document.getElementById('itemsPerPage').value = invoice.itemsPerPage || 15;
+        
+        // تحميل البنود
+        const itemsBody = document.getElementById('itemsBody');
+        itemsBody.innerHTML = '';
+        invoice.items.forEach((item, idx) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${idx + 1}</td>
+            <td><input type="text" value="${item.product}" class="product editable-cell" required></td>
+            <td><input type="number" class="quantity editable-cell" value="${item.quantity}" min="1" oninput="calculateTotal(this)"></td>
+            <td><input type="number" class="price editable-cell" value="${item.price}" min="0" step="0.01" oninput="calculateTotal(this)"></td>
+            <td><input type="number" class="tax editable-cell" value="${item.tax}" min="0" max="100" step="0.01" oninput="calculateTotal(this)"></td>
+            <td class="lineTotal">${item.total}</td>
+            <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+          `;
+          itemsBody.appendChild(row);
+        });
+        
+        // تحميل بيانات الدفع
+        document.getElementById('paymentMethod').value = invoice.payment.method;
+        document.getElementById('paymentDate').value = invoice.payment.date;
+        document.getElementById('paymentReference').value = invoice.payment.reference;
+        
+        // تحميل بيانات الشحن
+        document.getElementById('shippingAddress').value = invoice.shipping.address;
+        document.getElementById('shippingMethod').value = invoice.shipping.method;
+        document.getElementById('shippingCost').value = invoice.shipping.cost;
+        
+        // تحديث الإجماليات
+        updateTotals();
+        updatePreview();
+        changePageOrientation();
+        
+        // الانتقال إلى تبويب المعاينة
+        openTab('preview-tab', document.querySelector('.tab[onclick*="preview-tab"]'));
+        
+        closeSavedInvoicesModal();
+        showNotification('تم تحميل الفاتورة بنجاح', 'success');
+      }
+    }
+    
+    // حذف فاتورة محفوظة
+    function deleteSavedInvoice(index) {
+      if (confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
+        const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
+        savedInvoices.splice(index, 1);
+        localStorage.setItem('savedInvoices', JSON.stringify(savedInvoices));
+        loadSavedInvoices();
+        showNotification('تم حذف الفاتورة بنجاح', 'success');
+      }
+    }
+    
+    // إغلاق النافذة عند النقر خارجها
+    document.getElementById('savedInvoicesModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeSavedInvoicesModal();
+      }
+    });
   </script>
 </body>
 </html>
